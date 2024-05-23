@@ -20,11 +20,16 @@ set(LIB_SRC
     sylar/config.cpp
     sylar/fd_manager.cpp
     sylar/fiber.cpp
+    sylar/http/http.cpp
+    sylar/http/http_parser.cpp
+    sylar/http/http11_parser.rl.cpp
+    sylar/http/httpclient_parser.rl.cpp
     sylar/hook.cpp
     sylar/IOManager.cpp
     sylar/log.cpp
     sylar/scheduler.cpp
     sylar/Socket.cpp
+    sylar/tcp_server.cpp
     sylar/thread.cpp
     sylar/timer.cpp
     sylar/util.cpp
@@ -107,6 +112,21 @@ add_executable(test_bytearray tests/test_bytearray.cpp)
 add_dependencies(test_bytearray sylar)
 force_redefine_file_macro_for_sources(test_bytearray) # 重定义 宏 __FILE__
 target_link_libraries(test_bytearray ${LIBS})
+
+add_executable(test_http tests/test_http.cpp)
+add_dependencies(test_http sylar)
+force_redefine_file_macro_for_sources(test_http) # 重定义 宏 __FILE__
+target_link_libraries(test_http ${LIBS})
+
+add_executable(test_http_parser tests/test_http_parser.cpp)
+add_dependencies(test_http_parser sylar)
+force_redefine_file_macro_for_sources(test_http_parser) # 重定义 宏 __FILE__
+target_link_libraries(test_http_parser ${LIBS})
+
+add_executable(test_tcpserver tests/test_tcpserver.cpp)
+add_dependencies(test_tcpserver sylar)
+force_redefine_file_macro_for_sources(test_tcpserver) # 重定义 宏 __FILE__
+target_link_libraries(test_tcpserver ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
