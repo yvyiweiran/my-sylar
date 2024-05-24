@@ -70,11 +70,11 @@ Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool use_caller)
     }else {
         makecontext(&m_ctx, &Fiber::CallerMainFunc, 0);
     }
-    SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber  id=" << m_id;
+    // SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber  id=" << m_id;
 }
 
 Fiber::~Fiber() {
-    SYLAR_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id;
+    // SYLAR_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id;
     --s_fiber_count;
     if(m_stack) {
         SYLAR_ASSERT(m_state == TERM

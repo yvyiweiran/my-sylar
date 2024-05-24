@@ -112,7 +112,7 @@ private:
 
 };
 
-std::ostream& operator<<(std::ostream& os, const Socket& addr);
+std::ostream& operator<<(std::ostream& os, const Socket& sock);
 
 }
 #endif

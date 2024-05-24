@@ -29,6 +29,8 @@ set(LIB_SRC
     sylar/log.cpp
     sylar/scheduler.cpp
     sylar/Socket.cpp
+    sylar/socket_stream.cpp
+    sylar/stream.cpp
     sylar/tcp_server.cpp
     sylar/thread.cpp
     sylar/timer.cpp
@@ -127,6 +129,11 @@ add_executable(test_tcpserver tests/test_tcpserver.cpp)
 add_dependencies(test_tcpserver sylar)
 force_redefine_file_macro_for_sources(test_tcpserver) # 重定义 宏 __FILE__
 target_link_libraries(test_tcpserver ${LIBS})
+
+add_executable(echo_server examples/echo_server.cpp)
+add_dependencies(echo_server sylar)
+force_redefine_file_macro_for_sources(echo_server) # 重定义 宏 __FILE__
+target_link_libraries(echo_server ${LIBS})
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

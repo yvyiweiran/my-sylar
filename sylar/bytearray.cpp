@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "log.h"
 #include "macro.h"
+#include <stdexcept>
 namespace sylar{
 
 static Logger::ptr g_logger = SYLAR_LOG_ROOT();
@@ -381,8 +382,7 @@ void ByteArray::write(const void* buf, size_t size) {
 
 void ByteArray::read(void* buf, size_t size) {
     if(size > getReadSize()) {
-        // throw std::out_of_range("read not enough len");
-        SYLAR_ASSERT2(false, "read not enough len");
+        throw std::out_of_range("read not enough len");
     }
 
     size_t npos = m_position % m_baseSize;
@@ -411,8 +411,7 @@ void ByteArray::read(void* buf, size_t size) {
 
 void ByteArray::read(void* buf, size_t size, size_t position) {
     if(size > (m_size - position)) {
-        // throw std::out_of_range();
-        SYLAR_ASSERT2(false, "read not enough len");
+        throw std::out_of_range("read not enough len");
     }
 
     size_t npos = position % m_baseSize;
@@ -442,8 +441,7 @@ void ByteArray::read(void* buf, size_t size, size_t position) {
 
 void ByteArray::setPosition(size_t v) {
     if(v > m_capacity) {
-        // throw std::out_of_range("");
-        SYLAR_ASSERT2(false, "set_postion out of range");
+        throw std::out_of_range("set_postion out of range");
     }
     m_position = v;
     if(m_position > m_size) {

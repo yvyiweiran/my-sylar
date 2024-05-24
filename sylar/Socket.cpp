@@ -131,7 +131,7 @@ bool Socket::init(int sock) {
         m_isConnected = true;
         initSock();
         getLocalAddress();
-        getRecvTimeout();
+        getRemoteAddress();
         return true;
     }
     return false;
@@ -162,6 +162,7 @@ bool Socket::bind(const Address::ptr addr) {
 }
 
 bool Socket::connect(const Address::ptr addr, uint64_t timeout_ms) {
+    m_remoteAddress = addr;
     if(!isValid()) {
         newSock();
         if(SYLAR_UNLICKLY(!isValid())) {
