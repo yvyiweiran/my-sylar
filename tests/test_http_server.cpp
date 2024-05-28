@@ -9,8 +9,21 @@ void  test() {
     while (!server->bind(addr)) {
         sleep(2);
     }
+    auto sb = server->getServletDispatch();
+    sb->addServlet("/sylar/xx", [](sylar::http::HttpRequest::ptr req
+            , sylar::http::HttpResponse::ptr rsp
+            , sylar::http::HttpSession::ptr session) {
+        rsp->setBody(req->toString());
+        return 0;
+    });
+
+    sb->addGlobServlet("/sylar/*", [](sylar::http::HttpRequest::ptr req
+            , sylar::http::HttpResponse::ptr rsp
+            , sylar::http::HttpSession::ptr seesion) {
+        rsp->setBody("Glob:\r\n"+req->toString());
+        return 0;
+    });
     server->start();
-    // server->stop();
 }
 
 int main(int argc, char** argv) {

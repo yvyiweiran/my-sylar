@@ -16,8 +16,20 @@ static sylar::ConfigVar<uint64_t>::ptr g_http_request_max_body_size =
     sylar::Config::Lookup("http.request.max.body.size"
         , 64 * 1024 * 1024ul, "http request max body size");
 
+static sylar::ConfigVar<uint64_t>::ptr g_http_response_buffer_size =
+    sylar::Config::Lookup("http.response.buffer_size"
+        , 4 * 1024 * 1024ul, "http response buffer size");
+
+static sylar::ConfigVar<uint64_t>::ptr g_http_response_max_body_size =
+    sylar::Config::Lookup("http.response.max.body.size"
+        , 64 * 1024 * 1024ul, "http response max body size");
+
+
 static uint64_t s_http_request_buffer_size = 0;
 static uint64_t s_http_request_max_body_size = 0;
+
+static uint64_t s_http_response_buffer_size = 0;
+static uint64_t s_http_response_max_body_size = 0;
 
 uint64_t HttpRequestParser::GetHttpRequestBufferSize() {
     return s_http_request_buffer_size;
@@ -27,11 +39,21 @@ uint64_t HttpRequestParser::GetHttpRequestMaxBodySize() {
     return s_http_request_max_body_size;
 }
 
+uint64_t HttpResponseParser::GetHttpResponseBufferSize() {
+    return s_http_response_buffer_size;
+}
+
+uint64_t HttpResponseParser::GetHttpResponseMaxBodySize() {
+    return s_http_response_max_body_size;
+}
+
 namespace {
 struct _RequestSizeIniter{
     _RequestSizeIniter() {
-        s_http_request_max_body_size = g_http_request_max_body_size->getValue();
         s_http_request_buffer_size = g_http_request_buffer_size->getValue();
+        s_http_request_max_body_size = g_http_request_max_body_size->getValue();
+        s_http_response_buffer_size = g_http_response_buffer_size->getValue();
+        s_http_response_max_body_size = g_http_response_max_body_size->getValue();
         
         g_http_request_buffer_size->addListener(
             [](const uint64_t& ov, const uint64_t& nv) {
@@ -42,6 +64,18 @@ struct _RequestSizeIniter{
         g_http_request_max_body_size->addListener(
             [](const uint64_t& ov, const uint64_t& nv) {
                 s_http_request_max_body_size = nv;
+            }
+        );
+
+        g_http_response_buffer_size->addListener(
+            [](const uint64_t& ov, const uint64_t& nv) {
+                s_http_response_buffer_size = nv;
+            }
+        );
+
+        g_http_response_max_body_size->addListener(
+            [](const uint64_t& ov, const uint64_t& nv) {
+                s_http_response_max_body_size = nv;
             }
         );
     }
@@ -66,6 +100,7 @@ void on_request_uri(void* data, const char *at, size_t length) {
 }
 
 void on_request_fragment(void* data, const char *at, size_t length) {
+    // SYLAR_LOG_DEBUG(g_logger) << "on_request_fragment:" << std::string(at, length);
     HttpRequestParser* parser = static_cast<HttpRequestParser*>(data);
     parser->getDate()->setFragment(std::string(at, length));
 }
@@ -191,7 +226,7 @@ void on_response_http_field(void *data, const char *field,
     if(flen == 0) {
         SYLAR_LOG_WARN(g_logger) << "invalid http response version: "
             << std::string(value, vlen);
-        parser->setError(1002);
+        // parser->setError(1002);
         return;
     }
     parser->getDate()->setHeader(std::string(field, flen)
@@ -215,7 +250,10 @@ uint64_t HttpResponseParser::getContentLength() {
     return m_data->getHeaderAs<uint64_t>("content-length", 0);
 }
 
-size_t HttpResponseParser::execute(char* data, size_t len) {
+size_t HttpResponseParser::execute(char* data, size_t len, bool chunck) {
+    if(chunck) {
+        httpclient_parser_init(&m_parser);
+    }
     size_t rt = httpclient_parser_execute(&m_parser, data, len, 0);
     memmove(data, data + rt, len - rt);
     return rt;

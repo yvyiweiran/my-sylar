@@ -20,12 +20,14 @@ set(LIB_SRC
     sylar/config.cpp
     sylar/fd_manager.cpp
     sylar/fiber.cpp
+    sylar/http/http_connection.cpp
     sylar/http/http.cpp
     sylar/http/http_parser.cpp
     sylar/http/http11_parser.rl.cpp
     sylar/http/httpclient_parser.rl.cpp
     sylar/http/http_server.cpp
     sylar/http/http_session.cpp
+    sylar/http/servlet.cpp
     sylar/hook.cpp
     sylar/IOManager.cpp
     sylar/log.cpp
@@ -56,38 +58,23 @@ set(LIBS
     )
 
 # message("***", ${LIBS})
-
 sylar_add_executable(test "tests/test.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_config "tests/test_config.cpp" sylar "${LIBS}")
-
 sylar_add_executable(testtest_thread "tests/test_thread.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_util "tests/test_util.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_fiber "tests/test_fiber.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_scheduler "tests/test_scheduler.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_iomanager "tests/test_iomanager.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_timer "tests/test_timer.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_hook "tests/test_hook.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_address "tests/test_address.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_socket "tests/test_socket.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_bytearray "tests/test_bytearray.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_http_parser "tests/test_http_parser.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_tcpserver "tests/test_tcpserver.cpp" sylar "${LIBS}")
-
 sylar_add_executable(echo_server "examples/echo_server.cpp" sylar "${LIBS}")
-
 sylar_add_executable(test_http_server "tests/test_http_server.cpp" sylar "${LIBS}")
+sylar_add_executable(test_http_connection "tests/test_http_connection.cpp" sylar "${LIBS}")
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/../bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

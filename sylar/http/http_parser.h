@@ -20,6 +20,7 @@ public:
     void setError(int v) { m_error = v;}
 
     uint64_t getContentLength();
+    const http_parser& getParser() const { return m_parser;}
 public:
     static uint64_t GetHttpRequestBufferSize();
     static uint64_t GetHttpRequestMaxBodySize();
@@ -36,13 +37,18 @@ class HttpResponseParser {
 public:
     using ptr = std::shared_ptr<HttpResponseParser>;
     HttpResponseParser();
-    size_t execute(char* data, size_t len);
+    size_t execute(char* data, size_t len, bool chunck);
     int isFinished() ;
     int hasError() ;
 
     void setError(int v) { m_error = v;}
     HttpResponse::ptr getDate() const { return m_data;}
+
     uint64_t getContentLength();
+    const httpclient_parser& getParser() const { return m_parser;}
+public:
+    static uint64_t GetHttpResponseBufferSize();
+    static uint64_t GetHttpResponseMaxBodySize();
 private:
     httpclient_parser m_parser;
     HttpResponse::ptr m_data;
