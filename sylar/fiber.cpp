@@ -45,7 +45,7 @@ Fiber::Fiber() {
         SYLAR_ASSERT2(false, "getcontext error");
     }
     ++s_fiber_count;
-    // SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber main";
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber main";
 }
 
 Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool use_caller)
@@ -70,11 +70,11 @@ Fiber::Fiber(std::function<void()> cb, size_t stacksize, bool use_caller)
     }else {
         makecontext(&m_ctx, &Fiber::CallerMainFunc, 0);
     }
-    // SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber  id=" << m_id;
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::Fiber  id=" << m_id;
 }
 
 Fiber::~Fiber() {
-    // SYLAR_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id;
+    SYLAR_LOG_DEBUG(g_logger) << "Fiber::~Fiber id=" << m_id;
     --s_fiber_count;
     if(m_stack) {
         SYLAR_ASSERT(m_state == TERM
@@ -177,19 +177,19 @@ uint64_t Fiber::TodalFiber() {
 void Fiber::MainFunc() {
     Fiber::ptr cur = GetThis();
     SYLAR_ASSERT(cur);
-    try {
+    // try {
         cur->m_cb();
         cur->m_cb = nullptr;
         cur->m_state = TERM;
-    } catch(const std::exception& e) {
-        cur->m_state = EXCEPT;
-        SYLAR_LOG_ERROR(g_logger) << "Fiber Except: " << e.what()
-                << std::endl
-                << sylar::BacktraceToString(10);
-    }catch (...) {
-        cur->m_state = EXCEPT;
-        SYLAR_LOG_ERROR(g_logger) << "Fiber Except";
-    }
+    // } catch(const std::exception& e) {
+    //     cur->m_state = EXCEPT;
+    //     SYLAR_LOG_ERROR(g_logger) << "Fiber Except: " << e.what()
+    //             << std::endl
+    //             << sylar::BacktraceToString(10);
+    // }catch (...) {
+    //     cur->m_state = EXCEPT;
+    //     SYLAR_LOG_ERROR(g_logger) << "Fiber Except";
+    // }
     auto a = cur.get();
     cur.reset();
     a->swapOut();

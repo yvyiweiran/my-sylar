@@ -30,7 +30,7 @@ int SocketStream::read(ByteArray::ptr ba, size_t length) {
     }
     std::vector<iovec> iovs;
     ba->getWriteBuffers(iovs, length);
-    int rt = ba->getWriteBuffers(iovs, length);
+    int rt = m_sock->recv(&iovs[0], iovs.size());
     if(rt == 0) {
         ba->setPosition(ba->getPosition() + rt);
     }
@@ -58,7 +58,7 @@ int SocketStream::write(ByteArray::ptr ba, size_t length) {
 }
 
 void SocketStream::close() {
-    if(m_sock && m_owner) {
+    if(m_sock) {
         m_sock->close();
     }
 }

@@ -9,7 +9,7 @@ void test_req() {
 }
 
 void test_response() {
-    sylar::http::HttpReasponse::ptr rep(new sylar::http::HttpReasponse);
+    sylar::http::HttpResponse::ptr rep(new sylar::http::HttpResponse);
     rep->setHeader("X-X", "sylar");
     rep->setBody("hello sylar");
     rep->setStatus((sylar::http::HttpStatus)400);

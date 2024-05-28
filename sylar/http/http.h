@@ -194,6 +194,9 @@ public:
     void setFragment(const std::string& v) {m_fragment = v;}
     void setBody(const std::string& v) {m_body = v;}
 
+    bool isClose() const { return m_close;}
+    void setClose(const bool v) { m_close = v;}
+
     void setHeaders(const MapType& v) { m_headers = v;}
     void setParmas(const MapType& v) { m_params = v;}
     void setCookies(const MapType& v) { m_cookies = v;}
@@ -262,11 +265,11 @@ private:
     MapType m_cookies;
 };
 
-class HttpReasponse {
+class HttpResponse {
 public:
-    using ptr = std::shared_ptr<HttpReasponse>;
+    using ptr = std::shared_ptr<HttpResponse>;
     using MapType = std::map<std::string, std::string, CaseInsensitiveLess>;
-    HttpReasponse(uint8_t version = 0x11, bool close = true);
+    HttpResponse(uint8_t version = 0x11, bool close = true);
 
     HttpStatus getStatus() const { return m_status;}
     uint8_t getVersion() const { return m_version;}
@@ -308,7 +311,8 @@ private:
     MapType m_headers;
 };
 
-
+std::ostream& operator<<(std::ostream& os, HttpRequest& req);
+std::ostream& operator<<(std::ostream& os, HttpResponse& req);
 
 }
 }

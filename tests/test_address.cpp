@@ -41,9 +41,17 @@ void test_ipv4() {
     }
 }
 
+void test_1() {
+    auto addr = sylar::Address::LookupAnyIpAddress("0.0.0.0");
+    SYLAR_LOG_INFO(g_logger) << addr->toString();
+}
+
 int main(int argc, char** argv) {
     // test();
+    // SYLAR_LOG_DEBUG(g_logger) << "===================";
     // test_iface();
-    test_ipv4();
+    // SYLAR_LOG_DEBUG(g_logger) << "===================";
+    // test_ipv4();
+    test_1();
     return 0;
 }

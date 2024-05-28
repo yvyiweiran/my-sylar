@@ -1,0 +1,6 @@
+http:
+  request:
+    buffer_size: 1048576
+    max:
+      body:
+        size: 64*1024*1024
