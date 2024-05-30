@@ -2,8 +2,19 @@
 #include "sylar/log.h"
 #include "sylar/IOManager.h"
 #include <iostream>
+#include "sylar/Socket.h"
 
 static auto g_logger = SYLAR_LOG_ROOT();
+
+void test_pool() {
+    sylar::http::HttpConnectionPool::ptr pool(new sylar::http::HttpConnectionPool(
+        "www.sylar.top", "", 80, 10, 1000 * 30, 20));
+    
+    sylar::IOManager::GetThis()->addTimer(1000, [pool](){
+        auto r = pool->doGet("/", 300);
+        SYLAR_LOG_INFO(g_logger) << r->toString();
+    }, true);
+}
 
 void run() {
     sylar::Address::ptr addr = sylar::Address::LookupAnyIpAddress("www.sylar.top:80");
@@ -33,8 +44,15 @@ void run() {
     }
     SYLAR_LOG_INFO(g_logger) << "rsp:" << std::endl << *rsp;
 
-//     std::ofstream ofn("rep.dat");
-//     ofn << *rsp;
+    SYLAR_LOG_DEBUG(g_logger) << "================================";
+
+    auto r = sylar::http::HttpConnection::DoGet("http://www.sylar.top/blog/", 300);
+    SYLAR_LOG_INFO(g_logger) << "result" << r->result
+        << " error=" << r->error << "\nrsp=" << (r->response ? r->response->toString() : "");
+
+    SYLAR_LOG_DEBUG(g_logger) << "================================";
+
+    test_pool();
 }
 
 int main(int argc, char** argv) {
